@@ -1,0 +1,2 @@
+openai API setup
+study the codes and utilize them to test
