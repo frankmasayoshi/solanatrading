@@ -1,0 +1,24 @@
+def calculate_score(volume_20min, market_cap, wallet_correlation, social_score):
+    # 权重分配
+    weights = {
+        'volume': 0.3,      # 交易量权重30%
+        'market_cap': 0.25, # 市值权重25%
+        'wallet': 0.25,     # 钱包分散度25%
+        'social': 0.2       # 社交热度20%
+    }
+    
+    # 各维度标准化计算
+    volume_score = min(volume_20min / 5000, 1)  # 假设5000 SOL为满分基准
+    market_score = 1 if market_cap >=5e6 else market_cap/5e6
+    wallet_score = 1 - min(wallet_correlation, 1)  # 关联度系数0-1
+    social_score = min(social_score/100000, 1)  # 假设10万互动为满分
+    
+    # 加权计算
+    total_score = (
+        volume_score * weights['volume'] +
+        market_score * weights['market_cap'] +
+        wallet_score * weights['wallet'] +
+        social_score * weights['social']
+    ) * 10  # 换算为10分制
+    
+    return round(total_score, 2)
