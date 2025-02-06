@@ -1,0 +1,21 @@
+from collections import deque
+
+class VolumeTracker:
+    def __init__(self, window_minutes=20):
+        self.transactions = deque()
+        self.window = window_minutes * 60  # 转为秒
+
+    def add_transaction(self, timestamp, amount):
+        self.transactions.append((timestamp, amount))
+        self._purge_old(timestamp)
+
+    def get_volume(self, current_time):
+        self._purge_old(current_time)
+        return sum(amount for ts, amount in self.transactions)
+
+    def _purge_old(self, current_time):
+        while self.transactions:
+            if current_time - self.transactions[0][0] > self.window:
+                self.transactions.popleft()
+            else:
+                break
